@@ -1,0 +1,33 @@
+package com.example.readrssapp;
+
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+
+public class Article extends AppCompatActivity {
+
+    private WebView webView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_article);
+
+
+        webView = findViewById(R.id.webView1);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setDisplayZoomControls(true);
+        webView.setWebViewClient(new WebViewClient());
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+
+            /* If link is found, load it in the activity WebView. */
+            String url = extras.getString("url");
+            webView.loadUrl(url);
+
+        }
+    }
+}
