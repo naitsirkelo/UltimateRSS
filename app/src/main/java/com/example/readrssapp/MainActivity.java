@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,12 +25,11 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private static ListView feed;
+    private ListView feed;
     EditText regexpFilter;
 
     XmlPullParser parser;
@@ -40,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> links;
 
 
-    int items = 10, eventParser = 0;      /* Default: Showing 10 items. */
-    String updateTime = "24 hours"; /* Default: Every 24 hours. */
+    int items = 10, eventParser = 0;    /* Default: Showing 10 items. */
+    String updateTime = "24 hours";     /* Default: Every 24 hours. */
     String urlDefault = "https://www.nasa.gov/rss/dyn/breaking_news.rss";
     String regexpString = "";
 
@@ -71,6 +71,17 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        /* Declaring button that resets the filtered feed. */
+        final Button resetButton = findViewById(R.id.btn_reset);
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                regexpString = "";
+                updateFeed();
+            }
+        });
+
+
         feed = findViewById(R.id.feedListView);
         regexpFilter = findViewById(R.id.filterEditText);
 
@@ -78,29 +89,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    regexpString = regexpFilter.getText().toString();
 
-                    try {
-                        parseData(parser, eventParser, 0);
-                        updateFeed();
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (XmlPullParserException e) {
-                        e.printStackTrace();
-                    }
-                    Toast.makeText(getApplicationContext(), "Got the focus", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Enter filter to apply to feed.", Toast.LENGTH_LONG).show();
                 } else {
-                    try {
-                        parseData(parser, eventParser, 0);
-                        updateFeed();
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (XmlPullParserException e) {
-                        e.printStackTrace();
-                    }
-                    Toast.makeText(getApplicationContext(), "Lost the focus", Toast.LENGTH_LONG).show();
+                    regexpString = regexpFilter.getText().toString();
+                    updateFeed();
+                    regexpFilter.getText().clear();
                 }
             }
         });
@@ -121,10 +116,38 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        new ProcessInBackground().execute();
+
+        /* Fetch RSS data. */
+        refreshStream();
+
+
+        /* Convert updateTime from Preferences to seconds. */
+        int waitTime = 0;
+        switch (updateTime) {
+            case "24 hours":
+                waitTime = 86400;
+                break;
+            case "60 minutes":
+                waitTime = 3600;
+                break;
+            case "10 minutes":
+                waitTime = 600;
+                break;
+            default:
+                break;
+        }
+
+
+        /* Wait a predetermined amount of time before feed is reset and data is fetched again, */
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+
+                refreshStream();
+            }
+        }, waitTime * 1000);
 
     }
-
 
 
     @Override
@@ -155,8 +178,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         } catch (Exception ex) {
-            Toast.makeText(MainActivity.this, ex.toString(),
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, ex.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -215,24 +237,22 @@ public class MainActivity extends AppCompatActivity {
 
     public void updateFeed() {
 
-        ArrayList<String> matches = new ArrayList<>();
+        ArrayList<String> matchesList = new ArrayList<>();
 
         if (!regexpString.equals("")) {
 
-            Pattern p = Pattern.compile(regexpString);
+            for (String s: titles) {
 
-            for (String s : titles) {
-                if (p.matcher(s).matches()) {
-                    matches.add(s);
+                if (s.toLowerCase().contains(regexpString.toLowerCase())) {
+                    matchesList.add(s);
                 }
             }
-
         } else {
-            matches = titles;
+            matchesList = titles;
         }
 
 
-        adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, matches);
+        adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, matchesList);
         feed.setAdapter(adapter);
         regexpString = "";
 

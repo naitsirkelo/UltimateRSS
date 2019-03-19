@@ -17,7 +17,6 @@ import android.widget.Spinner;
 
 public class Preferences extends AppCompatActivity {
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,19 +26,16 @@ public class Preferences extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
 
-        final EditText urlText = (EditText) findViewById(R.id.urlEditText);
+        final EditText urlText =            findViewById(R.id.urlEditText);
         final Spinner itemsSpinner =        findViewById(R.id.spinner1items);
         final Spinner frequencySpinner =    findViewById(R.id.spinner2frequency);
-        String[] items =     { "5", "10", "20", "50", "100" };         // Number of items to display in feed.
-        int aMs = 600000;
-        int bMs = 3600000;
-        int cMs = 86400000; /* int aMin = 10, bMin = 60, cMin = 1440; */
-        final String[] frequency = {"24 hours", "60 minutes", "10 minutes"}; // Frequency at which the app fetches content, stored in ms.
+        final String[] items =           { "5", "10", "20", "50", "100" };      // Number of items to display in feed.
+        final String[] frequency = {"24 hours", "60 minutes", "10 minutes"};    // Frequency at which the app fetches content.
 
 
-        ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(Preferences.this,
+        ArrayAdapter<String> itemsAdapter = new ArrayAdapter<>(Preferences.this,
                 android.R.layout.simple_spinner_item, items);
-        ArrayAdapter<String> frequencyAdapter = new ArrayAdapter<String>(Preferences.this,
+        ArrayAdapter<String> frequencyAdapter = new ArrayAdapter<>(Preferences.this,
                 android.R.layout.simple_spinner_item, frequency);
 
         itemsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

@@ -1,5 +1,7 @@
 # UltimateRSS
 
+### git clone https://github.com/naitsirkelo/UltimateRSS.git
+
 ## Checklist
 
 
@@ -25,6 +27,6 @@
 
 - [x] When the content article has graphics, it is rendered correctly.
 
-- [ ] The Filter EditText works as expected.
+- [x] The Filter EditText works as expected. (Only text)
 
-- [ ] The app has JUnit Tests for testing the parsing, and the filtering functionality.
+- [x] The app has JUnit Tests for testing the parsing, and the filtering functionality. (Not fully implemented.)

@@ -8,6 +8,27 @@
     tools:context=".MainActivity">
 
     <Button
+        android:id="@+id/btn_reset"
+        android:layout_width="105dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="reset filter"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button"
+        android:textColor="@color/colorPrimary"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
         android:id="@+id/btn_preferences"
         android:layout_width="157dp"
         android:layout_height="49dp"
@@ -39,7 +60,7 @@
 
         <EditText
             android:id="@+id/filterEditText"
-            android:layout_width="318dp"
+            android:layout_width="309dp"
             android:layout_height="25dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
@@ -48,10 +69,10 @@
             android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
             android:background="?attr/actionModeBackground"
-            android:hint="Filter feed by RegExp..."
-            android:inputType="text"
             android:focusable="true"
             android:focusableInTouchMode="true"
+            android:hint="Filter feed..."
+            android:inputType="text"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.103"
